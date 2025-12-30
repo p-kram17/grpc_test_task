@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+  producer:
+    build:
+      context: ./producer
+      dockerfile: Dockerfile
+    container_name: grpc-producer
+    ports:
+      - "5000:5000"
+    networks:
+      - grpc-network
+    volumes:
+      - ./proto:/proto
+
+  consumer:
+    build:
+      context: ./consumer
+      dockerfile: Dockerfile
+    container_name: grpc-consumer
+    depends_on:
+      - producer
+    networks:
+      - grpc-network
+    volumes:
+      - ./proto:/proto
+
+networks:
+  grpc-network:
+    driver: bridge
